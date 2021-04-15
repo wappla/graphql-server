@@ -1,0 +1,8 @@
+.vscode
+.idea
+.DS_Store
+.VSCodeCounter
+*.log
+node_modules
+coverage
+dist
