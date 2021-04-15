@@ -1,7 +1,7 @@
 {
-    "name": "dashdot-graphql-server",
+    "name": "@dashdot/graphql-server",
     "version": "0.1.0",
-    "description": "A simple and functional native Node router with some helpers.",
+    "description": "A high performance graphql handler using the power of JIT.",
     "license": "MIT",
     "files": [
         "dist/"
