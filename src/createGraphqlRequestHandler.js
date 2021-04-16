@@ -11,7 +11,7 @@ import {
     GraphqlContextError
 } from './errors'
 
-export default function createGraphqlRequestHandler(store, context) {
+export default function createGraphqlRequestHandler(store, context = {}) {
     return async (req, res) => {
         if (req.method !== 'POST') {
             return methodNotAllowed(res)

@@ -28,10 +28,10 @@ import schema from './schema'
 
 const { PORT, HOST } = process.env
 
-const store = new GraphqlQueryStore()
+const store = new GraphqlQueryStore(schema)
 
 const server = createServer(
-    createGraphqlRequestHandler(store, schema)
+    createGraphqlRequestHandler(store)
 )
 
 server.listen(PORT, HOST, () => {
