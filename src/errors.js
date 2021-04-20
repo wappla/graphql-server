@@ -2,6 +2,8 @@
 const INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR'
 const VALIDATION_ERROR = 'VALIDATION_ERROR'
 const CONTEXT_ERROR = 'CONTEXT_ERROR'
+const UNAUTHORIZED_ERROR = 'UNAUTHORIZED_ERROR'
+const USER_INPUT_ERROR = 'USER_INPUT_ERROR'
 
 export class GraphqlError extends Error {
     constructor(
@@ -54,3 +56,27 @@ export class GraphqlContextError extends GraphqlError {
 }
 
 GraphqlContextError.CODE = CONTEXT_ERROR
+
+export class GraphqlUnauthorizedError extends GraphqlError {
+    constructor(
+        message = 'Unauthorized.',
+        extensions,
+    ) {
+        super(message, UNAUTHORIZED_ERROR, extensions)
+        this.name = 'GraphqlUnauthorizedError'
+    }
+}
+
+GraphqlUnauthorizedError.CODE = UNAUTHORIZED_ERROR
+
+export class GraphqlUserInputError extends GraphqlError {
+    constructor(
+        message = 'Bad user input error.',
+        extensions,
+    ) {
+        super(message, USER_INPUT_ERROR, extensions)
+        this.name = 'GraphqlUserInputError'
+    }
+}
+
+GraphqlUserInputError.CODE = USER_INPUT_ERROR
