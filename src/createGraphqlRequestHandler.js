@@ -51,7 +51,7 @@ export default function createGraphqlRequestHandler(store, context = {}) {
         let queryContext = context
         if (typeof context === 'function') {
             try {
-                queryContext = await context(req)
+                queryContext = await context(req, compiledQuery.query.name)
             } catch (e) {
                 if (e instanceof GraphqlContextError) {
                     const { errors, message } = e

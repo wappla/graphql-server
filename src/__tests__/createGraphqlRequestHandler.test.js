@@ -110,10 +110,16 @@ test('Test if graphqlHandler calls the context function and handles the query.',
     const request = new RequestMock()
     const response = new ResponseMock()
     const graphqlHandlerPromise = graphqlHandler(request, response)
-    const query = INTROSPECTION_QUERY
+    const operationName = 'test'
+    const query = `
+        query ${operationName} {
+            name
+        }
+    `
     request.send({ query })
     await graphqlHandlerPromise
-    expect(context).toHaveBeenCalledWith(request)
+
+    expect(context).toHaveBeenCalledWith(request, operationName)
     expect(response.writeHead).toHaveBeenCalledWith(SUCCESS, CONTENT_TYPE_JSON)
 })
 
