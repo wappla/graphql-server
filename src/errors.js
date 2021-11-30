@@ -1,3 +1,4 @@
+/* eslint-disable default-param-last */
 /* eslint-disable max-classes-per-file */
 const INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR'
 const VALIDATION_ERROR = 'VALIDATION_ERROR'

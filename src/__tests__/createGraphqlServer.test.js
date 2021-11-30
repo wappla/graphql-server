@@ -6,7 +6,9 @@ import { GraphqlContextError } from '../errors'
 import { createTestClient, createTestServer } from '../testing'
 
 const reject = (error) => (
-    new Promise((res, rej) => rej(error))
+    new Promise((res, rej) => {
+        rej(error)
+    })
 )
 
 const createGraphqlServer = async (schema, context = jest.fn()) => {

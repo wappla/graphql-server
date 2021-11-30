@@ -58,7 +58,9 @@ test('Test if graphqlHandler validates request body .', async () => {
 test('Test if graphqlHandler catches errors on the context function.', async () => {
     const queryStore = new GraphqlQueryStore(testSchema)
     const context = jest.fn().mockReturnValue(
-        new Promise((resolve, reject) => reject(new GraphqlContextError()))
+        new Promise((resolve, reject) => {
+            reject(new GraphqlContextError())
+        })
     )
     const graphqlHandler = createGraphqlRequestHandler(queryStore, context)
     const request = new RequestMock()
@@ -72,7 +74,9 @@ test('Test if graphqlHandler catches errors on the context function.', async () 
 
 test('Test if graphqlHandler catches errors on the resolver.', async () => {
     const errorResolver = jest.fn().mockReturnValue(
-        new Promise((resolve, reject) => reject(new Error()))
+        new Promise((resolve, reject) => {
+            reject(new Error())
+        })
     )
     const errorSchema = makeExecutableSchema({
         typeDefs: `
@@ -124,6 +128,24 @@ test('Test if graphqlHandler calls the context function and handles the query.',
 })
 
 test('Test if graphqlHandler handles invalid query.', async () => {
+    const queryStore = new GraphqlQueryStore(testSchema)
+    const context = jest.fn()
+    const graphqlHandler = createGraphqlRequestHandler(queryStore, context)
+    const request = new RequestMock()
+    const response = new ResponseMock()
+    const graphqlHandlerPromise = graphqlHandler(request, response)
+    const query = `
+        query {
+            falseValue
+        }
+    `
+    request.send({ query })
+    await graphqlHandlerPromise
+    expect(context).not.toHaveBeenCalled()
+    expect(response.writeHead).toHaveBeenCalledWith(400, CONTENT_TYPE_JSON)
+})
+
+test('Test if graphqlHandler handles subscriptions.', async () => {
     const queryStore = new GraphqlQueryStore(testSchema)
     const context = jest.fn()
     const graphqlHandler = createGraphqlRequestHandler(queryStore, context)

@@ -19,7 +19,11 @@ export default function createGraphqlRequestHandler(store, context = {}) {
         let jsonBody = null
         const contentType = req.headers['content-type']
         if (contentType && contentType.startsWith('multipart/form-data')) {
-            jsonBody = await processFileUploads(req, res)
+            try {
+                jsonBody = await processFileUploads(req, res)
+            } catch (e) {
+                return badRequest(res, `Failed to upload file. ${e.message}`)
+            }
         } else {
             const body = await readRequestBody(req)
             try {
