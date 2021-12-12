@@ -1,6 +1,6 @@
 {
     "name": "@dashdot/graphql-server",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "A high performance graphql handler using the power of JIT.",
     "license": "MIT",
     "files": [
