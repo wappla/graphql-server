@@ -22,7 +22,7 @@
         "prepare": "npm run build"
     },
     "peerDependencies": {
-        "graphql": "^0.15.0"
+        "graphql": "^15.0.0"
     },
     "dependencies": {
         "graphql-iso-date": "^3.6.1",
