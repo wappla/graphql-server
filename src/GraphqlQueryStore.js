@@ -6,8 +6,9 @@ import { createHash } from 'crypto'
 import { GraphqlValidationError } from './errors'
 
 export default class GraphqlQueryStore {
-    constructor(schema) {
+    constructor(schema, validationRules) {
         this.schema = schema
+        this.validationRules = validationRules
         this.store = new Map()
     }
 
@@ -26,7 +27,11 @@ export default class GraphqlQueryStore {
     }
 
     create(query) {
-        const validationErrors = validate(this.schema, parse(query))
+        const validationErrors = validate(
+            this.schema,
+            parse(query),
+            this.validationRules,
+        )
         if (validationErrors.length > 0) {
             throw new GraphqlValidationError('Invalid query.', {
                 errors: validationErrors
