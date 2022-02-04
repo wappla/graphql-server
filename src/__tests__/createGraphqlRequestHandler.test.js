@@ -20,6 +20,7 @@ const CONTENT_TYPE_JSON = {
     'Content-Type': 'application/json'
 }
 
+const name = 'test'
 const testSchema = makeExecutableSchema({
     typeDefs: `
         type Query {
@@ -28,7 +29,7 @@ const testSchema = makeExecutableSchema({
     `,
     resolvers: {
         Query: {
-            name: () => 'Test',
+            name: () => name,
         },
     },
 })
@@ -122,7 +123,6 @@ test('Test if graphqlHandler calls the context function and handles the query.',
     `
     request.send({ query })
     await graphqlHandlerPromise
-
     expect(context).toHaveBeenCalledWith(request, operationName)
     expect(response.writeHead).toHaveBeenCalledWith(SUCCESS, CONTENT_TYPE_JSON)
 })
@@ -145,8 +145,44 @@ test('Test if graphqlHandler handles invalid query.', async () => {
     expect(response.writeHead).toHaveBeenCalledWith(400, CONTENT_TYPE_JSON)
 })
 
-test('Test if graphqlHandler handles subscriptions.', async () => {
-    const queryStore = new GraphqlQueryStore(testSchema)
+test('Test if graphqlHandler protects against too complex queries.', async () => {
+    const schema = makeExecutableSchema({
+        typeDefs: `
+            type Query {
+                post: Post
+            }
+            type Post {
+                id: ID
+                author: Author
+            }
+            type Author {
+                id: ID
+                post: Post
+            }
+        `,
+        resolvers: {
+            Query: {
+                post: () => ({
+                    id: 1
+                }),
+            },
+            Post: {
+                author: () => ({
+                    id: 1
+                }),
+            },
+            Author: {
+                post: () => ({
+                    id: 1
+                }),
+            }
+        },
+    })
+    const queryComplexity = {
+        maximumComplexity: 10,
+        defaultComplexity: 5 // each field add a complexity of 5
+    }
+    const queryStore = new GraphqlQueryStore(schema, { queryComplexity })
     const context = jest.fn()
     const graphqlHandler = createGraphqlRequestHandler(queryStore, context)
     const request = new RequestMock()
@@ -154,7 +190,15 @@ test('Test if graphqlHandler handles subscriptions.', async () => {
     const graphqlHandlerPromise = graphqlHandler(request, response)
     const query = `
         query {
-            falseValue
+            post {
+                author {
+                    post {
+                        author {
+                            id
+                        }
+                    }
+                }
+            }
         }
     `
     request.send({ query })

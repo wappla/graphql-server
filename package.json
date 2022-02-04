@@ -26,7 +26,8 @@
         "graphql-upload": "^12.0.0"
     },
     "dependencies": {
-        "graphql-jit": "^0.7.1"
+        "graphql-jit": "^0.7.1",
+        "graphql-query-complexity": "^0.11.0"
     },
     "devDependencies": {
         "@babel/plugin-transform-runtime": "^7.16.4",

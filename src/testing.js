@@ -39,7 +39,15 @@ export class RequestMock extends EventEmitter {
 export class ResponseMock extends EventEmitter {
     constructor() {
         super()
-        this.writeHead = jest.fn()
-        this.end = jest.fn()
+        this.data = null
+        this.statusCode = null
+        this.headers = null
+        this.writeHead = jest.fn((statusCode, headers) => {
+            this.statusCode = statusCode
+            this.headers = headers
+        })
+        this.end = jest.fn((data) => {
+            this.data = data
+        })
     }
 }
