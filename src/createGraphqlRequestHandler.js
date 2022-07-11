@@ -1,4 +1,5 @@
-import { processRequest as processFileUploads } from 'graphql-upload'
+// eslint-disable-next-line import/extensions
+import processFileUploads from 'graphql-upload/processRequest.js'
 import {
     badRequestJson,
     badRequest,
