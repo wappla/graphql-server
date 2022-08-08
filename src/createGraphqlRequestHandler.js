@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/extensions
-import { processRequest } from 'graphql-upload'
+import { processFileUploads } from 'graphql-upload'
 import {
     badRequestJson,
     badRequest,
