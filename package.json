@@ -22,8 +22,8 @@
         "prepare": "npm run build"
     },
     "peerDependencies": {
-        "graphql": "^15.0.0 || ^16.0.0",
-        "graphql-upload": "^15.0.0"
+        "graphql": "*",
+        "graphql-upload": "*"
     },
     "dependencies": {
         "graphql-jit": "^0.7.4",
