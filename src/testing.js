@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import { jest } from '@jest/globals'
 import { EventEmitter } from 'events'
 import http from 'http'
 import testListen from 'test-listen'

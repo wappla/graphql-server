@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { GraphqlContextError } from '../errors'
 import createGraphqlRequestHandler from '../createGraphqlRequestHandler'
@@ -58,11 +59,11 @@ test('Test if graphqlHandler validates request body .', async () => {
 
 test('Test if graphqlHandler catches errors on the context function.', async () => {
     const queryStore = new GraphqlQueryStore(testSchema)
-    const context = jest.fn().mockReturnValue(
+    const context = jest.fn(() => (
         new Promise((resolve, reject) => {
             reject(new GraphqlContextError())
         })
-    )
+    ))
     const graphqlHandler = createGraphqlRequestHandler(queryStore, context)
     const request = new RequestMock()
     const response = new ResponseMock()
@@ -74,11 +75,11 @@ test('Test if graphqlHandler catches errors on the context function.', async () 
 })
 
 test('Test if graphqlHandler catches errors on the resolver.', async () => {
-    const errorResolver = jest.fn().mockReturnValue(
+    const errorResolver = jest.fn(() => (
         new Promise((resolve, reject) => {
             reject(new Error())
         })
-    )
+    ))
     const errorSchema = makeExecutableSchema({
         typeDefs: `
             type Query {
@@ -143,6 +144,41 @@ test('Test if graphqlHandler handles invalid query.', async () => {
     await graphqlHandlerPromise
     expect(context).not.toHaveBeenCalled()
     expect(response.writeHead).toHaveBeenCalledWith(400, CONTENT_TYPE_JSON)
+})
+
+test('Test if graphqlHandler handles query variables.', async () => {
+    const schema = makeExecutableSchema({
+        typeDefs: `
+            type Query {
+                test(id: ID!): ID
+            }
+        `,
+        resolvers: {
+            Query: {
+                test: (_, { id }) => ({
+                    id
+                }),
+            },
+        },
+    })
+    const queryStore = new GraphqlQueryStore(schema)
+    const context = jest.fn()
+    const graphqlHandler = createGraphqlRequestHandler(queryStore, context)
+    const request = new RequestMock()
+    const response = new ResponseMock()
+    const graphqlHandlerPromise = graphqlHandler(request, response)
+    const id = 1
+    const variables = { id }
+    const query = `
+        query test($id: ID!) {
+            test(id: $ID)
+        }
+    `
+    request.send({ query, variables })
+    await graphqlHandlerPromise
+    expect(context).not.toHaveBeenCalled()
+    expect(response.writeHead).toHaveBeenCalledWith(200, CONTENT_TYPE_JSON)
+    expect(response.data.test).toEqual(id)
 })
 
 test('Test if graphqlHandler protects against too complex queries.', async () => {

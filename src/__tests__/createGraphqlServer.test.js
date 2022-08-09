@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import { gql } from 'graphql-request'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import createGraphqlRequestHandler from '../createGraphqlRequestHandler'

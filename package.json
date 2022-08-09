@@ -2,6 +2,7 @@
     "name": "@dashdot/graphql-server",
     "version": "0.3.4",
     "description": "A high performance graphql handler using the power of JIT.",
+    "type": "module",
     "license": "MIT",
     "files": [
         "dist/"
@@ -15,8 +16,8 @@
     },
     "scripts": {
         "lint": "eslint .",
-        "test": "jest",
-        "test:coverage": "jest --coverage",
+        "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+        "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
         "codecov": "codecov",
         "build": "rm -rf dist/* && tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json && ./fixup",
         "prepare": "npm run build"
@@ -30,8 +31,6 @@
         "graphql-query-complexity": "^0.11.0"
     },
     "devDependencies": {
-        "@babel/plugin-transform-runtime": "^7.18.6",
-        "@babel/preset-env": "^7.18.6",
         "@dashdot/eslint-config-base": "^0.3.0",
         "@graphql-tools/schema": "^8.5.0",
         "codecov": "^3.8.3",
