@@ -150,14 +150,14 @@ test('Test if graphqlHandler handles query variables.', async () => {
     const schema = makeExecutableSchema({
         typeDefs: `
             type Query {
-                test(id: ID!): ID
+                test(id: String!): String
             }
         `,
         resolvers: {
             Query: {
-                test: (_, { id }) => ({
+                test: (_, { id }) => (
                     id
-                }),
+                ),
             },
         },
     })
@@ -167,18 +167,19 @@ test('Test if graphqlHandler handles query variables.', async () => {
     const request = new RequestMock()
     const response = new ResponseMock()
     const graphqlHandlerPromise = graphqlHandler(request, response)
-    const id = 1
+    const id = 'abc'
     const variables = { id }
     const query = `
-        query test($id: ID!) {
-            test(id: $ID)
+        query test($id: String!) {
+            test(id: $id)
         }
     `
     request.send({ query, variables })
     await graphqlHandlerPromise
-    expect(context).not.toHaveBeenCalled()
+    const body = JSON.parse(response.data)
+    expect(context).toHaveBeenCalled()
     expect(response.writeHead).toHaveBeenCalledWith(200, CONTENT_TYPE_JSON)
-    expect(response.data.test).toEqual(id)
+    expect(body.data.test).toEqual(id)
 })
 
 test('Test if graphqlHandler protects against too complex queries.', async () => {

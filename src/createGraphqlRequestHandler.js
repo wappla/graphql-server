@@ -37,14 +37,13 @@ export default function createGraphqlRequestHandler(store, context = {}) {
         if (!query) {
             return badRequest(res, 'The query body param is required.')
         }
-
         const queryId = store.createId(query)
         let compiledQuery = null
         if (store.has(queryId)) {
             compiledQuery = store.get(queryId)
         } else {
             try {
-                compiledQuery = store.create(query)
+                compiledQuery = store.create(query, variables)
             } catch (e) {
                 if (e instanceof GraphqlValidationError) {
                     const { errors, message } = e

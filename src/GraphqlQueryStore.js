@@ -15,15 +15,9 @@ export default class GraphqlQueryStore {
         } = {}
     } = {}) {
         this.schema = schema
-        const complexityRule = createComplexityRule({
-            maximumComplexity,
-            estimators: [simpleEstimator({ defaultComplexity })],
-        })
-        this.validationRules = [
-            ...specifiedRules,
-            complexityRule,
-            ...validationRules,
-        ]
+        this.validationRules = validationRules
+        this.maximumComplexity = maximumComplexity
+        this.defaultComplexity = defaultComplexity
         this.store = new Map()
     }
 
@@ -41,11 +35,26 @@ export default class GraphqlQueryStore {
         return this.store.has(id)
     }
 
-    create(query) {
+    generateValidationRules(variables) {
+        const complexityRule = createComplexityRule({
+            maximumComplexity: this.maximumComplexity,
+            estimators: [
+                simpleEstimator({ defaultComplexity: this.defaultComplexity })
+            ],
+            variables,
+        })
+        return [
+            ...specifiedRules,
+            complexityRule,
+            ...this.validationRules,
+        ]
+    }
+
+    create(query, variables) {
         const validationErrors = validate(
             this.schema,
             parse(query),
-            this.validationRules,
+            this.generateValidationRules(variables),
         )
         if (validationErrors.length > 0) {
             throw new GraphqlValidationError('Invalid query.', {
