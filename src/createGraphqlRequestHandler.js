@@ -3,16 +3,16 @@ import processGraphqlRequest from './processGraphqlRequest'
 export default function createGraphqlRequestHandler(store, context = {}) {
     return async (req, res) => {
         const {
-            statusCode,
+            status,
             text,
             body,
         } = await processGraphqlRequest(req, store, context)
         if (text) {
-            res.writeHead(statusCode)
+            res.writeHead(status)
             res.end(text)
         }
         if (body) {
-            res.writeHead(statusCode, {
+            res.writeHead(status, {
                 'Content-Type': 'application/json'
             })
             res.end(JSON.stringify(body))

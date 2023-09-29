@@ -3,17 +3,17 @@ const METHOD_NOT_ALLOWED = 405
 const BED_REQUEST = 400
 
 export const methodNotAllowed = (text = 'Method Not Allowed') => ({
-    statusCode: METHOD_NOT_ALLOWED,
+    status: METHOD_NOT_ALLOWED,
     text
 })
 
 export const badRequest = (text = 'Bad Request') => ({
-    statusCode: BED_REQUEST,
+    status: BED_REQUEST,
     text
 })
 
-export const json = (body, statusCode = OK) => ({
-    statusCode,
+export const json = (body, status = OK) => ({
+    status,
     body,
 })
 

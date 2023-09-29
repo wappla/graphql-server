@@ -57,13 +57,13 @@ export default class GraphqlQueryStore {
             this.generateValidationRules(variables),
         )
         if (validationErrors.length > 0) {
-            throw new GraphqlValidationError('Invalid query.', {
+            throw new GraphqlValidationError('Invalid query.', null, {
                 errors: validationErrors
             })
         }
         const compiledQuery = compileQuery(this.schema, parse(query))
         if (!isCompiledQuery(compiledQuery)) {
-            throw new GraphqlValidationError('Invalid query.', {
+            throw new GraphqlValidationError('Invalid query.', null, {
                 errors: compiledQuery.errors
             })
         }

@@ -100,7 +100,7 @@ test('if an error get resolved correctly.', async () => {
 test('if an error in the context function is returned correctly.', async () => {
     const name = 'test'
     const message = 'error'
-    const error = new GraphqlContextError(message, {
+    const error = new GraphqlContextError(message, null, {
         errors: [{
             message,
             path: null,
