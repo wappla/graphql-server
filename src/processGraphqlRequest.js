@@ -37,9 +37,8 @@ export default async function processGraphqlRequest(req, {
             return badRequest(`Failed to upload file. ${e.message}`)
         }
     } else {
-        const body = await readRequestBody(req)
         try {
-            jsonBody = JSON.parse(body)
+            jsonBody = await readRequestBody(req)
         } catch (e) {
             return badRequest('Unable to parse the request body.')
         }

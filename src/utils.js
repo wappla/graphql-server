@@ -8,7 +8,9 @@ export const readRequestBody = (req) => (
         req
             .on('data', (chunk) => body.push(chunk))
             .on('error', (error) => reject(error))
-            .on('end', () => resolve(Buffer.concat(body).toString()))
+            .on('end', () => resolve(
+                JSON.parse(Buffer.concat(body).toString())
+            ))
     })
 )
 
