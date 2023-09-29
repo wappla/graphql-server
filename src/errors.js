@@ -10,9 +10,11 @@ export class GraphqlError extends Error {
     constructor(
         message = 'Something went wrong',
         code = INTERNAL_SERVER_ERROR,
+        originalError,
         extensions,
     ) {
         super(message)
+        this.originalError = originalError
         this.code = code
         if (!this.name) {
             this.name = 'GraphqlError'
@@ -37,9 +39,10 @@ GraphqlError.CODE = INTERNAL_SERVER_ERROR
 export class GraphqlValidationError extends GraphqlError {
     constructor(
         message = 'Invalid GraphQL query',
+        originalError,
         extensions,
     ) {
-        super(message, VALIDATION_ERROR, extensions)
+        super(message, VALIDATION_ERROR, originalError, extensions)
         this.name = 'GraphqlValidationError'
     }
 }
@@ -49,9 +52,10 @@ GraphqlValidationError.CODE = VALIDATION_ERROR
 export class GraphqlContextError extends GraphqlError {
     constructor(
         message = 'Context creation failed.',
+        originalError,
         extensions,
     ) {
-        super(message, CONTEXT_ERROR, extensions)
+        super(message, CONTEXT_ERROR, originalError, extensions)
         this.name = 'GraphqlContextError'
     }
 }
@@ -61,9 +65,10 @@ GraphqlContextError.CODE = CONTEXT_ERROR
 export class GraphqlUnauthorizedError extends GraphqlError {
     constructor(
         message = 'Unauthorized.',
+        originalError,
         extensions,
     ) {
-        super(message, UNAUTHORIZED_ERROR, extensions)
+        super(message, UNAUTHORIZED_ERROR, originalError, extensions)
         this.name = 'GraphqlUnauthorizedError'
     }
 }
@@ -73,9 +78,10 @@ GraphqlUnauthorizedError.CODE = UNAUTHORIZED_ERROR
 export class GraphqlUserInputError extends GraphqlError {
     constructor(
         message = 'Bad user input error.',
+        originalError,
         extensions,
     ) {
-        super(message, USER_INPUT_ERROR, extensions)
+        super(message, USER_INPUT_ERROR, originalError, extensions)
         this.name = 'GraphqlUserInputError'
     }
 }
