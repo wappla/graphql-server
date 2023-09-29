@@ -1,24 +1,36 @@
 // eslint-disable-next-line import/extensions
-import { processRequest as processFileUploads } from 'graphql-upload'
 import {
     badRequestJson,
     badRequest,
     methodNotAllowed,
     json
 } from './responses'
-import { readRequestBody } from './utils'
 import {
     GraphqlValidationError,
     GraphqlContextError
 } from './errors'
 
-export default async function processGraphqlRequest(req, store, context) {
+export default async function processGraphqlRequest(req, {
+    store,
+    context = {},
+    processFileUploads,
+    readRequestBody,
+}) {
+    if (!store) {
+        throw Error('No query store provided.')
+    }
+    if (!readRequestBody) {
+        throw Error('No method provided to read the incoming request data.')
+    }
     if (req.method !== 'POST') {
         return methodNotAllowed()
     }
     let jsonBody = null
     const contentType = req.headers['content-type']
     if (contentType && contentType.startsWith('multipart/form-data')) {
+        if (!processFileUploads) {
+            return badRequest('File upload is not supported.')
+        }
         try {
             jsonBody = await processFileUploads(req)
         } catch (e) {
