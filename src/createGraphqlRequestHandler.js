@@ -1,8 +1,7 @@
-import { processRequest as processFileUploads } from 'graphql-upload'
 import { readRequestBody } from './utils'
 import processGraphqlRequest from './processGraphqlRequest'
 
-export default function createGraphqlRequestHandler(store, context) {
+export default function createGraphqlRequestHandler(store, context, processFileUploads) {
     return async (req, res) => {
         const {
             status,
