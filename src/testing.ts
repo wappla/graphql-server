@@ -1,31 +1,33 @@
 /* eslint-disable max-classes-per-file */
 import { jest } from '@jest/globals'
 import { EventEmitter } from 'events'
+import { GraphQLClient } from 'graphql-request'
 import http from 'http'
 import testListen from 'test-listen'
-import { GraphQLClient } from 'graphql-request'
 
-export function createTestClient(server, headers) {
+export function createTestClient(server: { uri: string }, headers = {}) {
     return new GraphQLClient(server.uri, { headers })
 }
 
-export async function createTestServer(handler) {
+export async function createTestServer(handler: http.RequestListener | undefined) {
     const server = http.createServer(handler)
     const uri = await testListen(server)
+    // @ts-ignore
     server.uri = uri
     return server
 }
 
 export class RequestMock extends EventEmitter {
-    constructor({
-        method = 'POST'
-    } = {}) {
+    method: string
+    headers?: any
+
+    constructor({ method = 'POST' } = {}) {
         super()
         this.method = method
         this.headers = {}
     }
 
-    send(data) {
+    send(data: WithImplicitCoercion<string | Uint8Array | readonly number[]>) {
         if (Buffer.isBuffer(data)) {
             this.emit('data', data)
         } else if (typeof data === 'object' || typeof data === 'number') {
@@ -38,6 +40,12 @@ export class RequestMock extends EventEmitter {
 }
 
 export class ResponseMock extends EventEmitter {
+    data: any
+    statusCode: any
+    headers: any
+    writeHead: any
+    end: any
+
     constructor() {
         super()
         this.data = null

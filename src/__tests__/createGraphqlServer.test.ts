@@ -1,16 +1,15 @@
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { jest } from '@jest/globals'
 import { gql } from 'graphql-request'
-import { makeExecutableSchema } from '@graphql-tools/schema'
-import createGraphqlRequestHandler from '../createGraphqlRequestHandler'
 import GraphqlQueryStore from '../GraphqlQueryStore'
+import createGraphqlRequestHandler from '../createGraphqlRequestHandler'
 import { GraphqlContextError } from '../errors'
 import { createTestClient, createTestServer } from '../testing'
 
-const reject = (error) => (
+const reject = (error) =>
     new Promise((res, rej) => {
         rej(error)
     })
-)
 
 const createGraphqlServer = async (schema, context = jest.fn()) => {
     const store = new GraphqlQueryStore(schema)
@@ -29,7 +28,7 @@ test('if a basic query can be resolved.', async () => {
         `,
         resolvers: {
             Query: {
-                name: nameResolver
+                name: nameResolver,
             },
         },
     })
@@ -101,13 +100,15 @@ test('if an error in the context function is returned correctly.', async () => {
     const name = 'test'
     const message = 'error'
     const error = new GraphqlContextError(message, null, {
-        errors: [{
-            message,
-            path: null,
-            extensions: {
-                code: GraphqlContextError.CODE
-            }
-        }]
+        errors: [
+            {
+                message,
+                path: null,
+                extensions: {
+                    code: GraphqlContextError.CODE,
+                },
+            },
+        ],
     })
     const nameResolver = jest.fn().mockReturnValue(name)
     const context = jest.fn().mockImplementation(() => reject(error))
@@ -119,7 +120,7 @@ test('if an error in the context function is returned correctly.', async () => {
         `,
         resolvers: {
             Query: {
-                name: nameResolver
+                name: nameResolver,
             },
         },
     })
