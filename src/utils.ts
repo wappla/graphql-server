@@ -22,7 +22,7 @@ export const readRequestBody = (req: {
     new Promise((resolve, reject) => {
         const body: any[] = []
         req.on('data', (chunk: any) => body.push(chunk))
-            .on('error', (error: any) => reject(error))
+            .on('error', (error: Error) => reject(error))
             .on('end', () => resolve(JSON.parse(Buffer.concat(body).toString())))
     })
 
