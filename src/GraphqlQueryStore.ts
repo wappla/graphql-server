@@ -1,20 +1,20 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable class-methods-use-this */
 import { createHash } from 'crypto'
-import { parse, specifiedRules, validate } from 'graphql'
+import { GraphQLSchema, parse, specifiedRules, validate } from 'graphql'
 import { compileQuery, isCompiledQuery } from 'graphql-jit'
 import { createComplexityRule, simpleEstimator } from 'graphql-query-complexity'
 import { GraphqlValidationError } from './errors'
 
 export default class GraphqlQueryStore {
-    schema: any
+    schema: GraphQLSchema
     validationRules: any
     maximumComplexity: number
     defaultComplexity: number
     store: Map<string, any>
 
     constructor(
-        schema: any,
+        schema: GraphQLSchema,
         {
             validationRules = [],
             queryComplexity: { maximumComplexity = 1000, defaultComplexity = 1 } = {},

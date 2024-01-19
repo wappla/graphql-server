@@ -1,4 +1,5 @@
 // eslint-disable-next-line import/extensions
+import { IncomingMessage } from 'http'
 import { GraphqlContextError, GraphqlValidationError } from './errors'
 import { badRequest, badRequestJson, json, methodNotAllowed } from './responses'
 
@@ -9,7 +10,7 @@ type GraphqlResponse = {
 }
 
 export default async function processGraphqlRequest(
-    req: { method: string; headers: { [x: string]: any } },
+    req: IncomingMessage,
     {
         store,
         context = {},
@@ -18,8 +19,8 @@ export default async function processGraphqlRequest(
     }: {
         store: any
         context: any
-        processFileUploads: any
-        readRequestBody: (req: any) => Promise<unknown>
+        processFileUploads: (req: IncomingMessage) => Promise<any>
+        readRequestBody: (req: IncomingMessage) => Promise<any>
     }
 ): Promise<GraphqlResponse> {
     if (!store) {

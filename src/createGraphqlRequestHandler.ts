@@ -1,3 +1,4 @@
+import { IncomingMessage } from 'http'
 import processGraphqlRequest from './processGraphqlRequest'
 import { readRequestBody } from './utils'
 
@@ -7,7 +8,7 @@ export default function createGraphqlRequestHandler(
     processFileUploads?: any
 ) {
     return async (
-        req: any,
+        req: IncomingMessage,
         res: {
             writeHead: (arg0: number, arg1?: { 'Content-Type': string } | undefined) => void
             end: (arg0: string) => void
