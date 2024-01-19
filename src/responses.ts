@@ -12,10 +12,10 @@ export const badRequest = (text = 'Bad Request') => ({
     text,
 })
 
-export const json = (body: { message: string; errors: [Error] }, status = OK) => ({
+export const json = (body: { message: string; errors: any }, status = OK) => ({
     status,
     body,
 })
 
-export const badRequestJson = (result: { message: string; errors: [Error] }) =>
+export const badRequestJson = (result: { message: string; errors: any }) =>
     json(result, BAD_REQUEST)
