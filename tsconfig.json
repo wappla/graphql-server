@@ -1,7 +1,5 @@
 {
     "compilerOptions": {
-        "allowJs": true,
-        "allowSyntheticDefaultImports": true,
         "baseUrl": "src",
         "declaration": true,
         "esModuleInterop": true,
@@ -9,21 +7,24 @@
         "lib": ["esnext"],
         "listEmittedFiles": false,
         "listFiles": false,
-        "moduleResolution": "node",
         "noFallthroughCasesInSwitch": true,
         "pretty": true,
-        "resolveJsonModule": true,
         "rootDir": "src",
         "skipLibCheck": true,
-        "strict": true,
         "traceResolution": false,
-        "types": ["node", "jest"]
+        "types": ["node", "jest"],
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "strict": true,
+        "strictNullChecks": true
     },
     "compileOnSave": false,
-    "exclude": [
-        "node_modules",
-        "dist",
-        "src/__tests__"
-    ],
-    "include": ["src"]
+    "exclude": ["node_modules", "dist", "src/__tests__"],
+    "include": ["src"],
+    "ts-node": {
+        "esm": true,
+        "swc": true
+    }
 }

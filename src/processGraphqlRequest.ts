@@ -1,21 +1,28 @@
 // eslint-disable-next-line import/extensions
-import {
-    badRequestJson,
-    badRequest,
-    methodNotAllowed,
-    json
-} from './responses'
-import {
-    GraphqlValidationError,
-    GraphqlContextError
-} from './errors'
+import { IncomingMessage } from 'http'
+import { GraphqlContextError, GraphqlValidationError } from './errors'
+import { badRequest, badRequestJson, json, methodNotAllowed } from './responses'
 
-export default async function processGraphqlRequest(req, {
-    store,
-    context = {},
-    processFileUploads,
-    readRequestBody,
-}) {
+type GraphqlResponse = {
+    status: number
+    text?: string
+    body?: any
+}
+
+export default async function processGraphqlRequest(
+    req: IncomingMessage,
+    {
+        store,
+        context = {},
+        processFileUploads,
+        readRequestBody,
+    }: {
+        store: any
+        context: any
+        processFileUploads: (req: IncomingMessage) => Promise<any>
+        readRequestBody: (req: IncomingMessage) => Promise<any>
+    }
+): Promise<GraphqlResponse> {
     if (!store) {
         throw Error('No query store provided.')
     }
@@ -33,7 +40,7 @@ export default async function processGraphqlRequest(req, {
         }
         try {
             jsonBody = await processFileUploads(req)
-        } catch (e) {
+        } catch (e: any) {
             return badRequest(`Failed to upload file. ${e.message}`)
         }
     } else {
@@ -54,7 +61,7 @@ export default async function processGraphqlRequest(req, {
     } else {
         try {
             compiledQuery = store.create(query, variables)
-        } catch (e) {
+        } catch (e: any) {
             if (e instanceof GraphqlValidationError) {
                 const { errors, message } = e
                 return badRequestJson({ message, errors })
@@ -66,7 +73,7 @@ export default async function processGraphqlRequest(req, {
     if (typeof context === 'function') {
         try {
             queryContext = await context(req, compiledQuery.query.name)
-        } catch (e) {
+        } catch (e: any) {
             if (e instanceof GraphqlContextError) {
                 const { errors, message } = e
                 return badRequestJson({ message, errors })

@@ -1,8 +1,8 @@
-import { jest } from '@jest/globals'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { GraphqlContextError } from '../errors'
-import createGraphqlRequestHandler from '../createGraphqlRequestHandler'
+import { jest } from '@jest/globals'
 import GraphqlQueryStore from '../GraphqlQueryStore'
+import createGraphqlRequestHandler from '../createGraphqlRequestHandler'
+import { GraphqlContextError } from '../errors'
 import { RequestMock, ResponseMock } from '../testing'
 
 const SUCCESS = 200
@@ -18,7 +18,7 @@ const INTROSPECTION_QUERY = `
     }
 `
 const CONTENT_TYPE_JSON = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
 }
 
 const name = 'test'
@@ -59,11 +59,12 @@ test('Test if graphqlHandler validates request body .', async () => {
 
 test('Test if graphqlHandler catches errors on the context function.', async () => {
     const queryStore = new GraphqlQueryStore(testSchema)
-    const context = jest.fn(() => (
-        new Promise((resolve, reject) => {
-            reject(new GraphqlContextError())
-        })
-    ))
+    const context = jest.fn(
+        () =>
+            new Promise((resolve, reject) => {
+                reject(new GraphqlContextError())
+            })
+    )
     const graphqlHandler = createGraphqlRequestHandler(queryStore, context)
     const request = new RequestMock()
     const response = new ResponseMock()
@@ -75,11 +76,12 @@ test('Test if graphqlHandler catches errors on the context function.', async () 
 })
 
 test('Test if graphqlHandler catches errors on the resolver.', async () => {
-    const errorResolver = jest.fn(() => (
-        new Promise((resolve, reject) => {
-            reject(new Error())
-        })
-    ))
+    const errorResolver = jest.fn(
+        () =>
+            new Promise((resolve, reject) => {
+                reject(new Error())
+            })
+    )
     const errorSchema = makeExecutableSchema({
         typeDefs: `
             type Query {
@@ -88,7 +90,7 @@ test('Test if graphqlHandler catches errors on the resolver.', async () => {
         `,
         resolvers: {
             Query: {
-                error: errorResolver
+                error: errorResolver,
             },
         },
     })
@@ -155,9 +157,7 @@ test('Test if graphqlHandler handles query variables.', async () => {
         `,
         resolvers: {
             Query: {
-                test: (_, { id }) => (
-                    id
-                ),
+                test: (_, { id }) => id,
             },
         },
     })
@@ -200,24 +200,24 @@ test('Test if graphqlHandler protects against too complex queries.', async () =>
         resolvers: {
             Query: {
                 post: () => ({
-                    id: 1
+                    id: 1,
                 }),
             },
             Post: {
                 author: () => ({
-                    id: 1
+                    id: 1,
                 }),
             },
             Author: {
                 post: () => ({
-                    id: 1
+                    id: 1,
                 }),
-            }
+            },
         },
     })
     const queryComplexity = {
         maximumComplexity: 10,
-        defaultComplexity: 5 // each field add a complexity of 5
+        defaultComplexity: 5, // each field add a complexity of 5
     }
     const queryStore = new GraphqlQueryStore(schema, { queryComplexity })
     const context = jest.fn()
