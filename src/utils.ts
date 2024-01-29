@@ -29,4 +29,4 @@ export const json = (res: ServerResponse, result: any, statusCode = OK) => {
     res.end(JSON.stringify(result))
 }
 
-export const badRequestJson = (res: any, result: any) => json(res, result, BAD_REQUEST)
+export const badRequestJson = (res: ServerResponse, result: any) => json(res, result, BAD_REQUEST)

@@ -2,11 +2,19 @@
 import { IncomingMessage } from 'http'
 import { GraphqlContextError, GraphqlValidationError } from './errors'
 import { badRequest, badRequestJson, json, methodNotAllowed } from './responses'
+import GraphqlQueryStore from './GraphqlQueryStore'
 
 type GraphqlResponse = {
     status: number
     text?: string
     body?: any
+}
+
+type ProcessGraphqlRequestOptions = {
+    store: GraphqlQueryStore
+    context: any
+    processFileUploads?: (req: IncomingMessage) => Promise<any>
+    readRequestBody: (req: IncomingMessage) => Promise<any>
 }
 
 export default async function processGraphqlRequest(
@@ -16,12 +24,7 @@ export default async function processGraphqlRequest(
         context = {},
         processFileUploads,
         readRequestBody,
-    }: {
-        store: any
-        context: any
-        processFileUploads: (req: IncomingMessage) => Promise<any>
-        readRequestBody: (req: IncomingMessage) => Promise<any>
-    }
+    }: ProcessGraphqlRequestOptions
 ): Promise<GraphqlResponse> {
     if (!store) {
         throw Error('No query store provided.')

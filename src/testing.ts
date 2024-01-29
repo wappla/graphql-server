@@ -1,20 +1,21 @@
 /* eslint-disable max-classes-per-file */
+import { RequestListener, createServer } from 'http'
 import { jest } from '@jest/globals'
 import { EventEmitter } from 'events'
 import { GraphQLClient } from 'graphql-request'
-import http from 'http'
 import testListen from 'test-listen'
 
-export function createTestClient(server: { uri: string }, headers = {}) {
-    return new GraphQLClient(server.uri, { headers })
+export function createTestClient(url: string, headers = {}) {
+    return new GraphQLClient(url, { headers })
 }
 
-export async function createTestServer(handler: http.RequestListener | undefined) {
-    const server = http.createServer(handler)
-    const uri = await testListen(server)
-    // @ts-ignore
-    server.uri = uri
-    return server
+export async function createTestServer(handler: RequestListener) {
+    const server = createServer(handler)
+    const url = await testListen(server)
+    return {
+        server,
+        url,
+    }
 }
 
 export class RequestMock extends EventEmitter {

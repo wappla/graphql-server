@@ -32,8 +32,8 @@ test('if a basic query can be resolved.', async () => {
             },
         },
     })
-    const server = await createGraphqlServer(schema)
-    const client = await createTestClient(server)
+    const { server, url } = await createGraphqlServer(schema)
+    const client = await createTestClient(url)
     const QUERY = gql`
         query {
             name
@@ -54,6 +54,7 @@ test('if an error get resolved correctly.', async () => {
     const message = 'error'
     const code = 'ERROR_CODE'
     const error = new Error(message)
+    // @ts-ignore
     error.extensions = { code }
     const nameResolver = jest.fn().mockReturnValue(name)
     const errorResolver = jest.fn().mockReturnValue(error)
@@ -71,8 +72,8 @@ test('if an error get resolved correctly.', async () => {
             },
         },
     })
-    const server = await createGraphqlServer(schema)
-    const client = await createTestClient(server)
+    const { server, url } = await createGraphqlServer(schema)
+    const client = await createTestClient(url)
     const QUERY = gql`
         query {
             name
@@ -124,8 +125,8 @@ test('if an error in the context function is returned correctly.', async () => {
             },
         },
     })
-    const server = await createGraphqlServer(schema, context)
-    const client = await createTestClient(server)
+    const { server, url } = await createGraphqlServer(schema, context)
+    const client = await createTestClient(url)
     const QUERY = gql`
         query {
             name

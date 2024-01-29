@@ -1,18 +1,16 @@
-import { IncomingMessage } from 'http'
+import { IncomingMessage, ServerResponse } from 'http'
 import processGraphqlRequest from './processGraphqlRequest'
 import { readRequestBody } from './utils'
+import GraphqlQueryStore from './GraphqlQueryStore'
 
 export default function createGraphqlRequestHandler(
-    store: any,
+    store: GraphqlQueryStore,
     context: any,
-    processFileUploads?: any
+    processFileUploads?:  (req: IncomingMessage) => Promise<any>
 ) {
     return async (
         req: IncomingMessage,
-        res: {
-            writeHead: (arg0: number, arg1?: { 'Content-Type': string } | undefined) => void
-            end: (arg0: string) => void
-        }
+        res: ServerResponse
     ) => {
         const { status, text, body } = await processGraphqlRequest(req, {
             store,
