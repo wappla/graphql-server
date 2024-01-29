@@ -100,16 +100,18 @@ test('if an error get resolved correctly.', async () => {
 test('if an error in the context function is returned correctly.', async () => {
     const name = 'test'
     const message = 'error'
-    const error = new GraphqlContextError(message, null, {
-        errors: [
-            {
-                message,
-                path: null,
-                extensions: {
-                    code: GraphqlContextError.CODE,
+    const error = new GraphqlContextError(message, {
+        extensions: {
+            errors: [
+                {
+                    message,
+                    path: null,
+                    extensions: {
+                        code: GraphqlContextError.CODE,
+                    },
                 },
-            },
-        ],
+            ],
+        }
     })
     const nameResolver = jest.fn().mockReturnValue(name)
     const context = jest.fn().mockImplementation(() => reject(error))
@@ -138,10 +140,10 @@ test('if an error in the context function is returned correctly.', async () => {
     } catch ({ response }) {
         expect(response.status).toEqual(400)
         expect(response.data).not.toBeDefined()
-        expect(response.errors.length).toEqual(1)
-        expect(response.errors[0].message).toBeDefined()
-        expect(response.errors[0].path).toEqual(null)
-        expect(response.errors[0].extensions.code).toEqual(GraphqlContextError.CODE)
+        expect(response.extensions.errors.length).toEqual(1)
+        expect(response.extensions.errors[0].message).toBeDefined()
+        expect(response.extensions.errors[0].path).toEqual(null)
+        expect(response.extensions.errors[0].extensions.code).toEqual(GraphqlContextError.CODE)
     } finally {
         server.close()
     }

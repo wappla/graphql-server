@@ -66,8 +66,8 @@ export default async function processGraphqlRequest(
             compiledQuery = store.create(query, variables)
         } catch (e: any) {
             if (e instanceof GraphqlValidationError) {
-                const { errors, message } = e
-                return badRequestJson({ message, errors })
+                const { extensions, message } = e
+                return badRequestJson({ message, extensions })
             }
             return badRequest(e.message)
         }
@@ -78,8 +78,8 @@ export default async function processGraphqlRequest(
             queryContext = await context(req, compiledQuery.query.name)
         } catch (e: any) {
             if (e instanceof GraphqlContextError) {
-                const { errors, message } = e
-                return badRequestJson({ message, errors })
+                const { extensions, message } = e
+                return badRequestJson({ message, extensions })
             }
             return badRequest(e.message)
         }
