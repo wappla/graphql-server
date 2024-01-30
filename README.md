@@ -1,6 +1,6 @@
 # Dashdot Graphql Server
 
-[![build](https://img.shields.io/github/workflow/status/wappla/graphql-server/Build?style=flat&colorA=000000&colorB=000000)](https://github.com/wappla/graphql-server/actions/workflows/on_push_main.yml)
+[![build](https://img.shields.io/github/actions/workflow/status/wappla/graphql-server/on_push_main.yml?style=flat&colorA=000000&colorB=000000)](https://github.com/wappla/graphql-server/actions/workflows/on_push_main.yml)
 [![codecov](https://img.shields.io/codecov/c/github/wappla/graphql-server?style=flat&colorA=000000&colorB=000000)](https://codecov.io/gh/wappla/graphql-server)
 
 A simple high performance graphql handler using the power of JIT. 
